@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PagoMeds - Login</title>
+
+<!-- Tailwind CDN -->
+<script src="https://cdn.tailwindcss.com"></script>
+
+<!-- Colores personalizados PagoMeds -->
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          lightblue: "#8ECAE6",
+          bluepm: "#219EBC",
+          deepblue: "#023047",
+          yellowpm: "#FFB703",
+          orangepm: "#FB8500"
+        }
+      }
+    }
+  }
+</script>
+
+</head>
+
+<body class="bg-lightblue flex items-center justify-center min-h-screen">
+
+  <div class="bg-white shadow-xl rounded-xl p-8 w-full max-w-md border-t-8 border-bluepm">
+
+    <h1 class="text-center text-3xl font-bold text-deepblue mb-6">
+      Pago<span class="text-bluepm">Meds</span>
+    </h1>
+
+    <form id="loginForm" class="space-y-6">
+
+      <div>
+        <label class="text-deepblue font-semibold">Correo electrónico</label>
+        <input type="email" id="email" required
+          class="w-full mt-1 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-bluepm">
+      </div>
+
+      <div>
+        <label class="text-deepblue font-semibold">Contraseña</label>
+        <input type="password" id="password" required
+          class="w-full mt-1 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-bluepm">
+      </div>
+
+      <button type="submit"
+        class="w-full bg-bluepm text-white py-2 rounded-lg font-bold hover:bg-deepblue transition">
+        Iniciar Sesión
+      </button>
+
+      <p id="errorMsg" class="text-red-600 text-center font-semibold hidden">Credenciales incorrectas</p>
+
+    </form>
+
+  </div>
+
+<script>
+document.getElementById("loginForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value;
+
+  const response = await fetch("http://localhost:4000/auth/login", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, password })
+  });
+
+  const data = await response.json();
+
+  if (response.ok) {
+    localStorage.setItem("token", data.token);
+    window.location.href = "/success";
+  } else {
+    document.getElementById("errorMsg").classList.remove("hidden");
+  }
+});
+</script>
+
+</body>
+</html>
